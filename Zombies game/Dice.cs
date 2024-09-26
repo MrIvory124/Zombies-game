@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Zombies_game
 {
-    public class Dice
+    public abstract class Dice
     {
         // Enum type for storing the only options of a dice face
         public enum ZombieOptions
@@ -18,11 +18,12 @@ namespace Zombies_game
         }
 
         // random for internal rolling
-        Random raagghh = new Random();
+        protected Random raagghh = new Random();
 
         // fields
-        ZombieOptions _diceValue;
-        Color _diceColor;
+        //protected ZombieOptions _diceValue;
+        protected Color _diceColor;
+        protected List<ZombieOptions> _facelist;
 
         // getter setters
         public Color DiceColor
@@ -30,39 +31,38 @@ namespace Zombies_game
             get { return _diceColor; }
         }
 
-        public ZombieOptions DiceValue
+        //public ZombieOptions DiceValue
+        //{
+        //    get { return _diceValue; }
+        //}
+
+        public List<ZombieOptions> Facelist
         {
-            get { return _diceValue; }
+            get { return _facelist; }
         }
 
         // constructors
-        public Dice
+        public Dice()
+        {
+            
+        }
 
         /// <summary>
-        /// Method to randomly pick from the 3 enum types
+        /// Method that returns a random face
         /// </summary>
-        public void RollDie()
+        public ZombieOptions RollDie()
         {
-            int face = raagghh.Next(0,3);
+            int faceRtrn = raagghh.Next(0, 6);
+            return _facelist[faceRtrn];
+        }
 
-            
-
-            switch (face)
-            {
-                case 0:
-                    // code block
-                    break;
-                case 1:
-                    // code block
-                    break;
-                case 3:
-                    // code block
-                    break;
-                default:
-                    // code block
-                    break;
-            }
-
+        /// <summary>
+        /// Override base tostring
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return this.DiceColor.ToString() + " " + Facelist.Count;
         }
 
     }
