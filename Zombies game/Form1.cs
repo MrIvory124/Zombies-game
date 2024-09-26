@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace Zombies_game
 {
     public partial class Form1 : Form
     {
+        readonly int REDDICENUM = 3;
+        readonly int GREENDICENUM = 6;
+        readonly int YELLOWDICENUM = 4;
+
         // array for the dice
         protected Dice[] diceArray;
 
@@ -25,10 +30,11 @@ namespace Zombies_game
         {
             DiceInit();
 
-            textBox1.BackColor = diceArray[0].DiceColor;
-            textBox1.Text = (diceArray[0].RollDie()).ToString();
+            //textBox1.BackColor = diceArray[0].DiceColor;
+            //textBox1.Text = (diceArray[0].RollDie()).ToString();
 
             Testcases();
+
 
         }
 
@@ -37,11 +43,58 @@ namespace Zombies_game
         /// </summary>
         private void DiceInit()
         {
-            diceArray = new Dice[13];
+            diceArray = new Dice[GREENDICENUM + YELLOWDICENUM + REDDICENUM];
+            List<int> arrayUsed = new List<int>();
 
-            for (int i = 0; i < diceArray.Length; i++)
+            // initialise all the dice
+            // TODO: could make it so that the red can only spawn with at least 1 between them
+            for (int i = 0; i < REDDICENUM; i++)
             {
-                diceArray[i] = new GDice();
+                i += nextDice(arrayUsed, i, "red");
+            }
+
+            for (int i = 0; i < YELLOWDICENUM; i++)
+            {
+                i += nextDice(arrayUsed, i, "yellow");
+            }
+
+            for (int i = 0;  i < GREENDICENUM; i++)
+            {
+                i += nextDice(arrayUsed, i, "green");
+            }
+
+
+
+        }
+
+        private int nextDice(List<int> arrayUsed, int i, string color)
+        {
+            // pick random spot
+            int nextPlace = rand.Next(0, 13);
+            // check to see if already a used place in the array
+            if (arrayUsed.Contains(nextPlace))
+            {
+                //Console.WriteLine($"Duplicate dice at {nextPlace}");
+                return -1;
+            }
+            else
+            {
+                arrayUsed.Add(nextPlace);
+                // select the correct color and add to the array 
+                switch (color)
+                {
+                    case "green":
+                        diceArray[nextPlace] = new GDice();
+                        break;
+                    case "yellow":
+                        diceArray[nextPlace] = new YDice();
+                        break;
+                    default:
+                        diceArray[nextPlace] = new RDice();
+                        break;
+                }
+                //Console.WriteLine($"Added dice at {nextPlace}");
+                return 0;
             }
         }
 
@@ -70,8 +123,13 @@ namespace Zombies_game
 
             }
 
+            Console.WriteLine("\nChecking the dicelist");
+            foreach (Dice dice in diceArray)
+            {
+                Console.WriteLine(dice.ToString());
+            }
 
-
+            Console.WriteLine("\nDone");
         }
 
     }

@@ -21,7 +21,7 @@ namespace Zombies_game
         protected Random raagghh = new Random();
 
         // fields
-        protected ZombieOptions _diceValue;
+        //protected ZombieOptions _diceValue;
         protected Color _diceColor;
         protected List<ZombieOptions> _facelist;
 
@@ -31,10 +31,10 @@ namespace Zombies_game
             get { return _diceColor; }
         }
 
-        public ZombieOptions DiceValue
-        {
-            get { return _diceValue; }
-        }
+        //public ZombieOptions DiceValue
+        //{
+        //    get { return _diceValue; }
+        //}
 
         public List<ZombieOptions> Facelist
         {
@@ -44,8 +44,7 @@ namespace Zombies_game
         // constructors
         public Dice()
         {
-            // initialise
-            _diceValue = new ZombieOptions();
+            
         }
 
         /// <summary>
