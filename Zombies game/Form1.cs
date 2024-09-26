@@ -13,12 +13,15 @@ namespace Zombies_game
 
         // array for the dice
         protected Dice[] diceArray;
+        protected List<int> usedDice = new List<int>();
 
         Random rand = new Random();
 
         public Form1()
         {
             InitializeComponent();
+
+            DiceInit(); // need a way to reset this later on maybe
         }
 
         /// <summary>
@@ -28,18 +31,28 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
-            DiceInit();
-
-            //textBox1.BackColor = diceArray[0].DiceColor;
-            //textBox1.Text = (diceArray[0].RollDie()).ToString();
+            GameplayLoop();
 
             Testcases();
 
 
         }
 
+        private void GameplayLoop()
+        {
+            // set the background color to the dice that is being used
+            textBox1.BackColor = diceArray[0].DiceColor;
+            textBox2.BackColor = diceArray[1].DiceColor;
+            textBox3.BackColor = diceArray[2].DiceColor;
+
+            // show in the text box the result
+            textBox1.Text = diceArray[0].RollDie().ToString();
+            textBox2.Text = diceArray[0].RollDie().ToString();
+            textBox3.Text = diceArray[0].RollDie().ToString();
+        }
+
         /// <summary>
-        /// Method for creating all 13 dice
+        /// Method for creating all 13 dice and putting them in the array
         /// </summary>
         private void DiceInit()
         {
@@ -50,24 +63,30 @@ namespace Zombies_game
             // TODO: could make it so that the red can only spawn with at least 1 between them
             for (int i = 0; i < REDDICENUM; i++)
             {
-                i += nextDice(arrayUsed, i, "red");
+                i += nextDice(arrayUsed, "red");
             }
 
             for (int i = 0; i < YELLOWDICENUM; i++)
             {
-                i += nextDice(arrayUsed, i, "yellow");
+                i += nextDice(arrayUsed, "yellow");
             }
 
             for (int i = 0;  i < GREENDICENUM; i++)
             {
-                i += nextDice(arrayUsed, i, "green");
+                i += nextDice(arrayUsed, "green");
             }
-
-
-
         }
 
-        private int nextDice(List<int> arrayUsed, int i, string color)
+        /// <summary>
+        /// This is a method that is used for initialising all of the dice.
+        /// It takes in some information, and transforms it so that a die can effectively
+        /// be placed in the array of dice. 
+        /// </summary>
+        /// <param name="arrayUsed"></param>
+        /// <param name="i"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        private int nextDice(List<int> arrayUsed, string color)
         {
             // pick random spot
             int nextPlace = rand.Next(0, 13);
@@ -106,10 +125,12 @@ namespace Zombies_game
 
             Console.WriteLine("Generating dice");
 
+            // add the dice to the dicelist
             diceList.Add(new GDice());
             diceList.Add(new YDice());
-            //diceList.Add(new RDice());
+            diceList.Add(new RDice());
 
+            // checks the dice list is working
             foreach (Dice dice in diceList)
             {
                 Console.WriteLine($"Checking dice {dice}");
@@ -118,6 +139,9 @@ namespace Zombies_game
                     Console.WriteLine(item);
                 }
 
+                // check roll functionality as well
+                Console.WriteLine($"Checking roll func {dice.RollDie()}");
+                Console.WriteLine($"Checking roll func {dice.RollDie()}");
                 Console.WriteLine($"Checking roll func {dice.RollDie()}");
                 Console.WriteLine();
 

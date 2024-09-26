@@ -39,7 +39,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(167, 111);
+            this.textBox1.Location = new System.Drawing.Point(217, 163);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(100, 20);
@@ -48,7 +48,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(167, 92);
+            this.label1.Location = new System.Drawing.Point(249, 147);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(292, 111);
+            this.textBox2.Location = new System.Drawing.Point(342, 163);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(100, 20);
@@ -65,7 +65,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(292, 92);
+            this.label2.Location = new System.Drawing.Point(373, 147);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
             this.label2.TabIndex = 1;
@@ -73,7 +73,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(428, 111);
+            this.textBox3.Location = new System.Drawing.Point(478, 163);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(100, 20);
@@ -82,7 +82,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(428, 92);
+            this.label3.Location = new System.Drawing.Point(510, 147);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 1;
@@ -90,7 +90,7 @@
             // 
             // diceRollbtn
             // 
-            this.diceRollbtn.Location = new System.Drawing.Point(306, 236);
+            this.diceRollbtn.Location = new System.Drawing.Point(353, 206);
             this.diceRollbtn.Name = "diceRollbtn";
             this.diceRollbtn.Size = new System.Drawing.Size(75, 23);
             this.diceRollbtn.TabIndex = 2;
