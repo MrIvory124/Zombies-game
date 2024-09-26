@@ -36,6 +36,11 @@ namespace Zombies_game
             get { return _diceValue; }
         }
 
+        public List<ZombieOptions> Facelist
+        {
+            get { return _facelist; }
+        }
+
         // constructors
         public Dice()
         {
@@ -58,7 +63,7 @@ namespace Zombies_game
         /// <returns></returns>
         public override string ToString()
         {
-            return this.DiceColor.ToString() + " " + this.DiceValue.ToString();
+            return this.DiceColor.ToString() + " " + Facelist.Count;
         }
 
     }
