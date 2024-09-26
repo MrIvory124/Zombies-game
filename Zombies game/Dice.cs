@@ -36,7 +36,11 @@ namespace Zombies_game
         }
 
         // constructors
-        public Dice
+        public Dice()
+        {
+            // initialise the enum
+            _diceValue = new ZombieOptions();
+        }
 
         /// <summary>
         /// Method to randomly pick from the 3 enum types
@@ -44,25 +48,28 @@ namespace Zombies_game
         public void RollDie()
         {
             int face = raagghh.Next(0,3);
+            Console.WriteLine(face);
 
-            
-
+            // switch that changes the result to desired outcome
             switch (face)
             {
                 case 0:
-                    // code block
+                    _diceValue = ZombieOptions.Brains;
                     break;
                 case 1:
-                    // code block
-                    break;
-                case 3:
-                    // code block
+                    _diceValue = ZombieOptions.Shotgun;
                     break;
                 default:
-                    // code block
+                    _diceValue = ZombieOptions.Feet;
                     break;
             }
 
+            Console.WriteLine(this.DiceValue.ToString());
+        }
+
+        public override string ToString()
+        {
+            return this.DiceValue.ToString();
         }
 
     }
