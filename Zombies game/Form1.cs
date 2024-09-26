@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Zombies_game
 {
-    public partial class Form1 : Form
+    public partial class GameScreen : Form
     {
         readonly int REDDICENUM = 3;
         readonly int GREENDICENUM = 6;
@@ -16,7 +16,7 @@ namespace Zombies_game
 
         Random rand = new Random();
 
-        public Form1()
+        public GameScreen()
         {
             InitializeComponent();
         }
@@ -28,13 +28,9 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
+            // init setup
             DiceInit();
-
-            //textBox1.BackColor = diceArray[0].DiceColor;
-            //textBox1.Text = (diceArray[0].RollDie()).ToString();
-
             Testcases();
-
 
         }
 
@@ -62,9 +58,6 @@ namespace Zombies_game
             {
                 i += nextDice(arrayUsed, i, "green");
             }
-
-
-
         }
 
         private int nextDice(List<int> arrayUsed, int i, string color)

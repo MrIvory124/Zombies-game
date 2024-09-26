@@ -1,6 +1,6 @@
 ﻿namespace Zombies_game
 {
-    partial class Form1
+    partial class GameScreen
     {
         /// <summary>
         /// Required designer variable.
@@ -98,10 +98,11 @@
             this.diceRollbtn.UseVisualStyleBackColor = true;
             this.diceRollbtn.Click += new System.EventHandler(this.diceRollbtn_Click);
             // 
-            // Form1
+            // GameScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.diceRollbtn);
             this.Controls.Add(this.label3);
@@ -110,7 +111,8 @@
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
-            this.Name = "Form1";
+            this.Name = "GameScreen";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
