@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Zombies_game
 {
-    public class Dice
+    public abstract class Dice
     {
         // Enum type for storing the only options of a dice face
         public enum ZombieOptions
@@ -18,11 +18,12 @@ namespace Zombies_game
         }
 
         // random for internal rolling
-        Random raagghh = new Random();
+        protected Random raagghh = new Random();
 
         // fields
-        ZombieOptions _diceValue;
-        Color _diceColor;
+        protected ZombieOptions _diceValue;
+        protected Color _diceColor;
+        protected List<ZombieOptions> _facelist;
 
         // getter setters
         public Color DiceColor
@@ -38,38 +39,26 @@ namespace Zombies_game
         // constructors
         public Dice()
         {
-            // initialise the enum
+            // initialise
             _diceValue = new ZombieOptions();
         }
 
         /// <summary>
-        /// Method to randomly pick from the 3 enum types
+        /// Method that returns a random face
         /// </summary>
-        public void RollDie()
+        public ZombieOptions RollDie()
         {
-            int face = raagghh.Next(0,3);
-            Console.WriteLine(face);
-
-            // switch that changes the result to desired outcome
-            switch (face)
-            {
-                case 0:
-                    _diceValue = ZombieOptions.Brains;
-                    break;
-                case 1:
-                    _diceValue = ZombieOptions.Shotgun;
-                    break;
-                default:
-                    _diceValue = ZombieOptions.Feet;
-                    break;
-            }
-
-            Console.WriteLine(this.DiceValue.ToString());
+            int faceRtrn = raagghh.Next(0, 6);
+            return _facelist[faceRtrn];
         }
 
+        /// <summary>
+        /// Override base tostring
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
-            return this.DiceValue.ToString();
+            return this.DiceColor.ToString() + " " + this.DiceValue.ToString();
         }
 
     }
