@@ -11,17 +11,25 @@ namespace Zombies_game
         readonly int GREENDICENUM = 6;
         readonly int YELLOWDICENUM = 4;
 
-        // array for the dice
+        protected Dice[] currentDice;
+
+        // array for all the dice
         protected Dice[] diceArray;
-        protected List<int> usedDice = new List<int>();
+        protected List<int> usedDice = new List<int>(); // contains the indexes used die, just measuring the length of the array to find this
 
         Random rand = new Random();
+
+        // create the player
+        Player player1 = new Player();
+        Player player2 = new Player(); // this can be a bot, change list later
 
         public Form1()
         {
             InitializeComponent();
 
             DiceInit(); // need a way to reset this later on maybe
+
+            currentDice = new Dice[3];
         }
 
         /// <summary>
@@ -31,24 +39,56 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
-            GameplayLoop();
+            RollAllDice();
+            
 
+            //DiceInit();
             Testcases();
-
-
         }
 
-        private void GameplayLoop()
+        private void RollAllDice()
         {
+            //TODO: make the dice work as intended, currently just choosing the first 3
+
+            // roll 3 die, add them to the list of working dice
+            for (int i = 0; i < 3; i++)
+            {
+                diceArray[i].RollDie();
+                currentDice[i] = diceArray[i];
+            }
+
             // set the background color to the dice that is being used
-            textBox1.BackColor = diceArray[0].DiceColor;
-            textBox2.BackColor = diceArray[1].DiceColor;
-            textBox3.BackColor = diceArray[2].DiceColor;
+            textBox1.BackColor = currentDice[0].DiceColor;
+            textBox2.BackColor = currentDice[1].DiceColor;
+            textBox3.BackColor = currentDice[2].DiceColor;
 
             // show in the text box the result
-            textBox1.Text = diceArray[0].RollDie().ToString();
-            textBox2.Text = diceArray[0].RollDie().ToString();
-            textBox3.Text = diceArray[0].RollDie().ToString();
+            textBox1.Text = currentDice[0].ShowFace();
+            textBox2.Text = currentDice[1].ShowFace();
+            textBox3.Text = currentDice[2].ShowFace();
+
+            ScorePoints(player1);
+        }
+
+        /// <summary>
+        /// Currently this method adds score if they roll brains, and adds shotguns if they get them
+        /// </summary>
+        /// <param name="player"></param>
+        private void ScorePoints(Player player)
+        {
+            foreach (Dice dice in currentDice)
+            {
+                if (dice.CurrentVal == Dice.ZombieOptions.Brains)
+                {
+                    player.Score += 1;
+                }
+                else if (dice.CurrentVal == Dice.ZombieOptions.Shotgun)
+                {
+                    player.Shotguns += 1;
+                }
+            }
+
+            UpdateScores();
         }
 
         /// <summary>
@@ -61,14 +101,15 @@ namespace Zombies_game
 
             // initialise all the dice
             // TODO: could make it so that the red can only spawn with at least 1 between them
-            for (int i = 0; i < REDDICENUM; i++)
-            {
-                i += nextDice(arrayUsed, "red");
-            }
 
             for (int i = 0; i < YELLOWDICENUM; i++)
             {
                 i += nextDice(arrayUsed, "yellow");
+            }
+
+            for (int i = 0; i < REDDICENUM; i++)
+            {
+                i += nextDice(arrayUsed, "red");
             }
 
             for (int i = 0;  i < GREENDICENUM; i++)
@@ -140,9 +181,12 @@ namespace Zombies_game
                 }
 
                 // check roll functionality as well
-                Console.WriteLine($"Checking roll func {dice.RollDie()}");
-                Console.WriteLine($"Checking roll func {dice.RollDie()}");
-                Console.WriteLine($"Checking roll func {dice.RollDie()}");
+                dice.RollDie();
+                Console.WriteLine($"Checking roll func {dice.ShowFace()}");
+                dice.RollDie();
+                Console.WriteLine($"Checking roll func {dice.ShowFace()}");
+                dice.RollDie();
+                Console.WriteLine($"Checking roll func {dice.ShowFace()}");
                 Console.WriteLine();
 
             }
@@ -154,6 +198,17 @@ namespace Zombies_game
             }
 
             Console.WriteLine("\nDone");
+        }
+
+        private void UpdateScores()
+        {
+            // update player 1
+            plyr1Brains.Text = player1.Score.ToString();
+            plyr1Shotguns.Text = player1.Shotguns.ToString();
+
+            // update player 2
+            plyr2Brains.Text = player2.Score.ToString();
+            plyr2Shotguns.Text = player2.Shotguns.ToString();
         }
 
     }
