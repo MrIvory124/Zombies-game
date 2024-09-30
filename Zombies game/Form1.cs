@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Windows.Forms;
 
 namespace Zombies_game
@@ -23,6 +22,12 @@ namespace Zombies_game
         Player player1 = new Player();
         Player player2 = new Player(); // this can be a bot, change list later
 
+        // turn and score keeping
+        bool player1Turn = true;
+        int score = 0;
+        int shotguns = 0;
+        bool finalround = false;
+
         public Form1()
         {
             InitializeComponent();
@@ -30,6 +35,7 @@ namespace Zombies_game
             DiceInit(); // need a way to reset this later on maybe
 
             currentDice = new Dice[3];
+            turnTxtbox.Text = "Player 1's turn";
         }
 
         /// <summary>
@@ -39,13 +45,22 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
-            RollAllDice();
-            
+            // roll the dice
+            //RollAllDice();
 
+            //CheckContinueStatus();
+
+            //debugging options
             //DiceInit();
-            Testcases();
+            Testcases(sender, e);
+
+
+
         }
 
+        /// <summary>
+        /// When triggered, it will roll the dice and show to the user
+        /// </summary>
         private void RollAllDice()
         {
             //TODO: make the dice work as intended, currently just choosing the first 3
@@ -57,39 +72,133 @@ namespace Zombies_game
                 currentDice[i] = diceArray[i];
             }
 
-            // set the background color to the dice that is being used
-            textBox1.BackColor = currentDice[0].DiceColor;
-            textBox2.BackColor = currentDice[1].DiceColor;
-            textBox3.BackColor = currentDice[2].DiceColor;
-
-            // show in the text box the result
-            textBox1.Text = currentDice[0].ShowFace();
-            textBox2.Text = currentDice[1].ShowFace();
-            textBox3.Text = currentDice[2].ShowFace();
-
-            ScorePoints(player1);
-        }
-
-        /// <summary>
-        /// Currently this method adds score if they roll brains, and adds shotguns if they get them
-        /// </summary>
-        /// <param name="player"></param>
-        private void ScorePoints(Player player)
-        {
-            foreach (Dice dice in currentDice)
+            // put the relevant points in the relevant boxes
+            foreach (Dice thisDice in currentDice)
             {
-                if (dice.CurrentVal == Dice.ZombieOptions.Brains)
+                if (thisDice.CurrentVal == Dice.ZombieOptions.Brains)
                 {
-                    player.Score += 1;
+                    score += 1;
                 }
-                else if (dice.CurrentVal == Dice.ZombieOptions.Shotgun)
+                else if (thisDice.CurrentVal == Dice.ZombieOptions.Shotgun)
                 {
-                    player.Shotguns += 1;
+                    shotguns += 1;
                 }
             }
 
-            UpdateScores();
+            UpdateTextBoxes();
+
         }
+
+        /// <summary>
+        /// This method checks if the user has been caught by shotguns.
+        /// If not we do nothing.
+        /// </summary>
+        private void CheckContinueStatus()
+        {
+            if (shotguns > 2)
+            {
+                if (finalround == true) // if its the round they got to catch the other player
+                {
+                    // end the game
+                    TriggerEndGame();
+                }
+                else
+                {
+                    MessageBox.Show("You got gunned down!");
+                    shotguns = 0;
+                    score = 0;
+                    player1Turn = !player1Turn;
+                }
+
+                UpdateTextBoxes();
+            }
+            else if (player1.Score >= 13)
+            {
+                finalround = true;
+                MessageBox.Show("Player 2, you get 1 round to catch them!");
+            }
+            else if (player2.Score >= 13)
+            {
+                finalround = true;
+                MessageBox.Show("Player 1, you get 1 round to catch them!");
+            }
+        }
+
+
+        /// <summary>
+        /// If the player clicks the stop button, we move to scoring for
+        /// the other player
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void stopScoreBtn_Click(object sender, EventArgs e)
+        {
+            if (shotguns < 3) // if theyre not out
+            {
+                if (finalround)
+                {
+                    if (player1Turn)
+                    {
+                        if (player1.Score > player2.Score)
+                        {
+                            TriggerEndGame();
+                        }
+                        else
+                        {
+                            MessageBox.Show("You caught them! Keep going!");
+
+                            // invert whos turn it is and clear text boxes
+                            player1Turn = !player1Turn;
+
+                            score = 0;
+                            shotguns = 0;
+
+                        }
+                    }
+                    else
+                    {
+                        if (player2.Score > player1.Score)
+                        {
+                            TriggerEndGame();
+                        }
+                        else
+                        {
+                            MessageBox.Show("You caught them! Keep going!");
+
+                            // invert whos turn it is and clear text boxes
+                            player1Turn = !player1Turn;
+
+                            score = 0;
+                            shotguns = 0;
+
+                        }
+                    }
+                }
+                // add scores
+                else if (player1Turn)
+                {
+                    player1.Score += score;
+                    // invert whos turn it is and clear text boxes
+                    player1Turn = !player1Turn;
+
+                    score = 0;
+                    shotguns = 0;
+                }
+                else
+                {
+                    player2.Score += score;
+                    // invert whos turn it is and clear text boxes
+                    player1Turn = !player1Turn;
+
+                    score = 0;
+                    shotguns = 0;
+                }
+
+            }
+
+            UpdateTextBoxes();
+        }
+
 
         /// <summary>
         /// Method for creating all 13 dice and putting them in the array
@@ -112,7 +221,7 @@ namespace Zombies_game
                 i += nextDice(arrayUsed, "red");
             }
 
-            for (int i = 0;  i < GREENDICENUM; i++)
+            for (int i = 0; i < GREENDICENUM; i++)
             {
                 i += nextDice(arrayUsed, "green");
             }
@@ -158,7 +267,7 @@ namespace Zombies_game
             }
         }
 
-        private void Testcases()
+        private void Testcases(object sender, EventArgs e)
         {
             // list for temp dice
             List<Dice> diceList = new List<Dice>();
@@ -197,19 +306,97 @@ namespace Zombies_game
                 Console.WriteLine(dice.ToString());
             }
 
+            // test case for checking points
+            bool checkPointsWorking = true;
+            if (checkPointsWorking)
+            {
+                // it is player 1s turn
+                player1Turn = true;
+
+                // player 1 is about to win
+                player1.Score = 13;
+                player2.Score = 10;
+
+                // they have 0 shotguns
+                shotguns = 0;
+
+                // they click the roll button
+                RollAllDice();
+
+                Console.WriteLine("Is final round: " + finalround);
+                // this should enable the final round
+                CheckContinueStatus();
+                Console.WriteLine("Is final round: " + finalround);
+
+                // the person in this case has 2 shotguns
+                // they gained no additional points
+                shotguns = 2;
+                score = 0;
+                // the person clicks stop, just to simulate
+                stopScoreBtn_Click(sender, e);
+            }
+
+
+
             Console.WriteLine("\nDone");
         }
 
-        private void UpdateScores()
+        private void UpdateTextBoxes()
         {
-            // update player 1
-            plyr1Brains.Text = player1.Score.ToString();
-            plyr1Shotguns.Text = player1.Shotguns.ToString();
+            if (player1Turn)
+            {
+                turnTxtbox.Text = "Player 1's Turn";
+            }
+            else
+            {
+                turnTxtbox.Text = "Player 2's Turn";
+            }
 
-            // update player 2
+            // for the turn information in the middle
+            turnBrainsTxt.Text = score.ToString();
+            turnShotgunTxt.Text = shotguns.ToString();
+
+            // set the background color to the dice that is being used
+            textBox1.BackColor = currentDice[0].DiceColor; // could fix this by adding them to a list and doing it that way
+            textBox2.BackColor = currentDice[1].DiceColor;
+            textBox3.BackColor = currentDice[2].DiceColor;
+
+            // show in the text box the result
+            textBox1.Text = currentDice[0].ShowFace();
+            textBox2.Text = currentDice[1].ShowFace();
+            textBox3.Text = currentDice[2].ShowFace();
+
+            // update score boxes
+            plyr1Brains.Text = player1.Score.ToString();
             plyr2Brains.Text = player2.Score.ToString();
-            plyr2Shotguns.Text = player2.Shotguns.ToString();
         }
 
+        private void TriggerEndGame()
+        {
+            // announce the winner
+            string text = "Player 1";
+            if (player1Turn)
+            {
+                text = "Player 2";
+            }
+
+            MessageBox.Show($"Congratualtions {text}, you won!");
+
+            // reset everything
+            DiceInit();
+            currentDice = new Dice[3];
+            turnTxtbox.Text = "Player 1's turn";
+            rand = new Random();
+
+            // create the player
+            player1 = new Player();
+            player2 = new Player(); // this can be a bot, change list later
+
+            // turn and score keeping
+            player1Turn = true;
+            score = 0;
+            shotguns = 0;
+            finalround = false;
+        }
     }
 }
