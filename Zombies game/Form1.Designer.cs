@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -50,6 +51,8 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.turnTxtbox = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.forTesting = new System.Windows.Forms.Button();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -241,11 +244,27 @@
             this.turnTxtbox.Size = new System.Drawing.Size(100, 20);
             this.turnTxtbox.TabIndex = 4;
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 200;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // forTesting
+            // 
+            this.forTesting.Location = new System.Drawing.Point(27, 415);
+            this.forTesting.Name = "forTesting";
+            this.forTesting.Size = new System.Drawing.Size(75, 23);
+            this.forTesting.TabIndex = 7;
+            this.forTesting.Text = "Fake scores";
+            this.forTesting.UseVisualStyleBackColor = true;
+            this.forTesting.Click += new System.EventHandler(this.forTesting_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.forTesting);
             this.Controls.Add(this.stopScoreBtn);
             this.Controls.Add(this.plyr2Brains);
             this.Controls.Add(this.turnTxtbox);
@@ -298,6 +317,8 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox turnTxtbox;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button forTesting;
     }
 }
 

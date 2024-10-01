@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Zombies_game
 {
@@ -31,8 +32,6 @@ namespace Zombies_game
         {
         
         }
-
-
 
     }
 }
