@@ -24,6 +24,7 @@ namespace Zombies_game
         //protected ZombieOptions _diceValue;
         protected Color _diceColor;
         protected List<ZombieOptions> _facelist;
+        protected ZombieOptions _currentValue;
 
         // getter setters
         public Color DiceColor
@@ -31,14 +32,16 @@ namespace Zombies_game
             get { return _diceColor; }
         }
 
-        //public ZombieOptions DiceValue
-        //{
-        //    get { return _diceValue; }
-        //}
 
         public List<ZombieOptions> Facelist
         {
             get { return _facelist; }
+        }
+
+        public ZombieOptions CurrentVal
+        {
+            get { return _currentValue; }
+            set { _currentValue = value; }
         }
 
         // constructors
@@ -50,10 +53,10 @@ namespace Zombies_game
         /// <summary>
         /// Method that returns a random face
         /// </summary>
-        public ZombieOptions RollDie()
+        public void RollDie()
         {
             int faceRtrn = raagghh.Next(0, 6);
-            return _facelist[faceRtrn];
+            CurrentVal = _facelist[faceRtrn];
         }
 
         /// <summary>
@@ -63,6 +66,15 @@ namespace Zombies_game
         public override string ToString()
         {
             return this.DiceColor.ToString() + " " + Facelist.Count;
+        }
+
+        /// <summary>
+        /// Override base tostring
+        /// </summary>
+        /// <returns></returns>
+        public string ShowFace()
+        {
+            return CurrentVal.ToString();
         }
 
     }
