@@ -53,12 +53,14 @@
             this.turnTxtbox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.forTesting = new System.Windows.Forms.Button();
+            this.cupTxtbox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(216, 257);
+            this.textBox1.Location = new System.Drawing.Point(216, 322);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(100, 20);
@@ -67,7 +69,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(248, 241);
+            this.label1.Location = new System.Drawing.Point(248, 306);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 1;
@@ -75,7 +77,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(341, 257);
+            this.textBox2.Location = new System.Drawing.Point(341, 322);
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(100, 20);
@@ -84,7 +86,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(372, 241);
+            this.label2.Location = new System.Drawing.Point(372, 306);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
             this.label2.TabIndex = 1;
@@ -92,7 +94,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(477, 257);
+            this.textBox3.Location = new System.Drawing.Point(477, 322);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
             this.textBox3.Size = new System.Drawing.Size(100, 20);
@@ -101,7 +103,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(509, 241);
+            this.label3.Location = new System.Drawing.Point(509, 306);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 1;
@@ -109,7 +111,7 @@
             // 
             // diceRollBtn
             // 
-            this.diceRollBtn.Location = new System.Drawing.Point(309, 305);
+            this.diceRollBtn.Location = new System.Drawing.Point(309, 370);
             this.diceRollBtn.Name = "diceRollBtn";
             this.diceRollBtn.Size = new System.Drawing.Size(75, 23);
             this.diceRollBtn.TabIndex = 2;
@@ -159,7 +161,7 @@
             // 
             // stopScoreBtn
             // 
-            this.stopScoreBtn.Location = new System.Drawing.Point(400, 305);
+            this.stopScoreBtn.Location = new System.Drawing.Point(400, 370);
             this.stopScoreBtn.Name = "stopScoreBtn";
             this.stopScoreBtn.Size = new System.Drawing.Size(75, 23);
             this.stopScoreBtn.TabIndex = 5;
@@ -210,7 +212,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Location = new System.Drawing.Point(186, 226);
+            this.groupBox3.Location = new System.Drawing.Point(186, 291);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(423, 129);
             this.groupBox3.TabIndex = 6;
@@ -218,12 +220,14 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.label9);
+            this.groupBox4.Controls.Add(this.cupTxtbox);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.turnShotgunTxt);
             this.groupBox4.Controls.Add(this.turnBrainsTxt);
             this.groupBox4.Location = new System.Drawing.Point(327, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(130, 145);
+            this.groupBox4.Size = new System.Drawing.Size(130, 193);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "This turn";
@@ -239,7 +243,7 @@
             // 
             // turnTxtbox
             // 
-            this.turnTxtbox.Location = new System.Drawing.Point(342, 200);
+            this.turnTxtbox.Location = new System.Drawing.Point(342, 265);
             this.turnTxtbox.Name = "turnTxtbox";
             this.turnTxtbox.Size = new System.Drawing.Size(100, 20);
             this.turnTxtbox.TabIndex = 4;
@@ -247,7 +251,6 @@
             // timer1
             // 
             this.timer1.Interval = 200;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // forTesting
             // 
@@ -258,6 +261,22 @@
             this.forTesting.Text = "Fake scores";
             this.forTesting.UseVisualStyleBackColor = true;
             this.forTesting.Click += new System.EventHandler(this.forTesting_Click);
+            // 
+            // cupTxtbox
+            // 
+            this.cupTxtbox.Location = new System.Drawing.Point(15, 148);
+            this.cupTxtbox.Name = "cupTxtbox";
+            this.cupTxtbox.Size = new System.Drawing.Size(100, 20);
+            this.cupTxtbox.TabIndex = 4;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(38, 132);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(61, 13);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Dice in cup";
             // 
             // Form1
             // 
@@ -319,6 +338,8 @@
         private System.Windows.Forms.TextBox turnTxtbox;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button forTesting;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox cupTxtbox;
     }
 }
 

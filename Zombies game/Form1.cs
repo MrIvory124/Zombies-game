@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Zombies_game
 {
@@ -21,11 +20,20 @@ namespace Zombies_game
         readonly int GREENDICENUM = 6;
         readonly int YELLOWDICENUM = 4;
 
+        /// <summary>
+        /// An array that will be length 3, this is all the dice we are using
+        /// </summary>
         protected Dice[] currentDice;
 
-        // array for all the dice
-        protected Dice[] diceArray;
-        protected List<int> usedDice = new List<int>(); // contains the indexes used die, just measuring the length of the array to find this
+        /// <summary>
+        /// A list for all 13 dice
+        /// </summary>
+        protected List<Dice> diceList; // replacing the stupid array with this list
+
+        /// <summary>
+        /// A list that contains the indexxes of used die. Mesure the length of this array to see which die we are up to
+        /// </summary>
+        protected List<int> usedDice;
 
         Random rand = new Random();
 
@@ -43,9 +51,9 @@ namespace Zombies_game
         {
             InitializeComponent();
 
+            currentDice = new Dice[3];
             DiceInit(); // need a way to reset this later on maybe
 
-            currentDice = new Dice[3];
             turnTxtbox.Text = "Player 1's turn";
         }
 
@@ -73,7 +81,7 @@ namespace Zombies_game
                 // if they failed in their final round, consider it over
                 if (finalround)
                 {
-                    
+
                     TriggerEndGame(WhichPlayerTurn());
                 }
             }
@@ -130,21 +138,72 @@ namespace Zombies_game
             return false;
 
         }
+        /// <summary>
+        /// Method for creating all 13 dice and putting them in the array
+        /// </summary>
+        private void DiceInit()
+        {
+            diceList = new List<Dice>();
+            usedDice = new List<int>();
+
+            // initialise all the dice
+            // TODO: could make it so that the red can only spawn with at least 1 between them
+
+            for (int i = 0; i < YELLOWDICENUM; i++)
+            {
+                diceList.Add(new YDice());
+            }
+
+            for (int i = 0; i < REDDICENUM; i++)
+            {
+                diceList.Add(new RDice());
+            }
+
+            for (int i = 0; i < GREENDICENUM; i++)
+            {
+                diceList.Add(new GDice());
+            }
+
+            // also add 3 to the current dice array, to avoid errors.
+            for (int i = 0; i < 3; i++)
+            {
+                diceList[i].RollDie();
+                currentDice[i] = diceList[i];
+                // make sure we keep track of the dice we are up to
+                usedDice.Add(i);
+            }
+        }
 
         /// <summary>
         /// When triggered, it will roll the dice and show to the user
         /// </summary>
         private void RollAllDice()
         {
-            //TODO: make the dice work as intended, currently just choosing the first 3
-
-            //timer1.Enabled = true;
-
-            // roll 3 die, add them to the list of working dice
+            // swap to new dice if needed
             for (int i = 0; i < 3; i++)
             {
-                diceArray[i].RollDie();
-                currentDice[i] = diceArray[i];
+                // if we have reached the end of the array, re-init the dice array and reset the count
+                if (usedDice.Count >= 13)
+                {
+                    usedDice.Clear();
+                    DiceInit();
+                }
+
+                // if any of the dice have shotguns or brains showing, get rid of them and move on to the next
+                if (currentDice[i].CurrentVal == Dice.ZombieOptions.Shotgun || currentDice[i].CurrentVal == Dice.ZombieOptions.Brains)
+                {
+                    currentDice[i] = diceList[usedDice.Count]; 
+
+                    usedDice.Add(i);
+                    handler("Not feet, rechosing");
+                }
+
+                // roll the dice
+                foreach (Dice dice in currentDice)
+                {
+                    dice.RollDie();
+                    handler(dice.ToString());
+                }
             }
 
             // put the relevant points in the relevant boxes
@@ -160,6 +219,7 @@ namespace Zombies_game
                 }
             }
 
+            handler($"Amount of dice used: {usedDice.Count}");
             UpdateTextBoxes();
 
         }
@@ -198,8 +258,11 @@ namespace Zombies_game
             Player currentPlayer = WhichPlayerTurn();
             PlayerScores();
 
+            // this is supposed to be instead: in a round of 3 people, if the person who went first wins, then the other
+            // 2 get to finish their turn, otherwise its game over. wtf is this shit
             // if its the final round
-            if (finalround == true)
+            if (finalround == true) // TODO: REWORK THIS FUCKING SHIT BECAUSE ITS INCORRECT
+                
             {
                 handler("In final rounds");
                 if (currentPlayer == player1)
@@ -258,74 +321,6 @@ namespace Zombies_game
 
             Testcases();
             handler("Player1's turn? " + player1Turn);
-        }
-
-
-        /// <summary>
-        /// Method for creating all 13 dice and putting them in the array
-        /// </summary>
-        private void DiceInit()
-        {
-            diceArray = new Dice[GREENDICENUM + YELLOWDICENUM + REDDICENUM];
-            List<int> arrayUsed = new List<int>();
-
-            // initialise all the dice
-            // TODO: could make it so that the red can only spawn with at least 1 between them
-
-            for (int i = 0; i < YELLOWDICENUM; i++)
-            {
-                i += nextDice(arrayUsed, "yellow");
-            }
-
-            for (int i = 0; i < REDDICENUM; i++)
-            {
-                i += nextDice(arrayUsed, "red");
-            }
-
-            for (int i = 0; i < GREENDICENUM; i++)
-            {
-                i += nextDice(arrayUsed, "green");
-            }
-        }
-
-        /// <summary>
-        /// This is a method that is used for initialising all of the dice.
-        /// It takes in some information, and transforms it so that a die can effectively
-        /// be placed in the array of dice. 
-        /// </summary>
-        /// <param name="arrayUsed"></param>
-        /// <param name="i"></param>
-        /// <param name="color"></param>
-        /// <returns></returns>
-        private int nextDice(List<int> arrayUsed, string color)
-        {
-            // pick random spot
-            int nextPlace = rand.Next(0, 13);
-            // check to see if already a used place in the array
-            if (arrayUsed.Contains(nextPlace))
-            {
-                //handler($"Duplicate dice at {nextPlace}");
-                return -1;
-            }
-            else
-            {
-                arrayUsed.Add(nextPlace);
-                // select the correct color and add to the array 
-                switch (color)
-                {
-                    case "green":
-                        diceArray[nextPlace] = new GDice();
-                        break;
-                    case "yellow":
-                        diceArray[nextPlace] = new YDice();
-                        break;
-                    default:
-                        diceArray[nextPlace] = new RDice();
-                        break;
-                }
-                //handler($"Added dice at {nextPlace}");
-                return 0;
-            }
         }
 
         private void Testcases()
@@ -404,13 +399,13 @@ namespace Zombies_game
                         textBox2.BackColor = currentDice[1].DiceColor;
                         textBox2.Text = currentDice[1].ShowFace();
                     }
-                        
+
                     if (currentDice[2] != null)
                     {
                         textBox3.BackColor = currentDice[2].DiceColor;
                         textBox3.Text = currentDice[2].ShowFace();
                     }
-                       
+
                 }
                 else
                 {
@@ -425,6 +420,9 @@ namespace Zombies_game
             // update score boxes
             plyr1Brains.Text = player1.Score.ToString();
             plyr2Brains.Text = player2.Score.ToString();
+
+            cupTxtbox.Text = (13 - usedDice.Count).ToString();
+
             handler("==========");
         }
 
@@ -480,11 +478,6 @@ namespace Zombies_game
             {
                 return player2;
             }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            UpdateTextBoxes();
         }
 
         private void forTesting_Click(object sender, EventArgs e)
