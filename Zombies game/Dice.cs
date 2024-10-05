@@ -68,14 +68,6 @@ namespace Zombies_game
             return this.DiceColor.ToString() + " " + Facelist.Count;
         }
 
-        /// <summary>
-        /// Override base tostring
-        /// </summary>
-        /// <returns></returns>
-        public string ShowFace()
-        {
-            return CurrentVal.ToString();
-        }
 
     }
 }
