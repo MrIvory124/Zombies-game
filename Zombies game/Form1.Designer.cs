@@ -49,12 +49,14 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.cupTxtbox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.turnTxtbox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.forTesting = new System.Windows.Forms.Button();
-            this.cupTxtbox = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.roundNumtxtbox = new System.Windows.Forms.TextBox();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -172,7 +174,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(373, 42);
+            this.label8.Location = new System.Drawing.Point(45, 86);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(36, 13);
             this.label8.TabIndex = 1;
@@ -180,14 +182,14 @@
             // 
             // turnBrainsTxt
             // 
-            this.turnBrainsTxt.Location = new System.Drawing.Point(15, 46);
+            this.turnBrainsTxt.Location = new System.Drawing.Point(15, 102);
             this.turnBrainsTxt.Name = "turnBrainsTxt";
             this.turnBrainsTxt.Size = new System.Drawing.Size(100, 20);
             this.turnBrainsTxt.TabIndex = 4;
             // 
             // turnShotgunTxt
             // 
-            this.turnShotgunTxt.Location = new System.Drawing.Point(15, 101);
+            this.turnShotgunTxt.Location = new System.Drawing.Point(15, 157);
             this.turnShotgunTxt.Name = "turnShotgunTxt";
             this.turnShotgunTxt.Size = new System.Drawing.Size(100, 20);
             this.turnShotgunTxt.TabIndex = 4;
@@ -224,18 +226,37 @@
             this.groupBox4.Controls.Add(this.cupTxtbox);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.turnShotgunTxt);
+            this.groupBox4.Controls.Add(this.roundNumtxtbox);
+            this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.turnBrainsTxt);
+            this.groupBox4.Controls.Add(this.label8);
             this.groupBox4.Location = new System.Drawing.Point(327, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(130, 193);
+            this.groupBox4.Size = new System.Drawing.Size(130, 234);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "This turn";
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(38, 188);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(61, 13);
+            this.label9.TabIndex = 1;
+            this.label9.Text = "Dice in cup";
+            // 
+            // cupTxtbox
+            // 
+            this.cupTxtbox.Location = new System.Drawing.Point(15, 204);
+            this.cupTxtbox.Name = "cupTxtbox";
+            this.cupTxtbox.Size = new System.Drawing.Size(100, 20);
+            this.cupTxtbox.TabIndex = 4;
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(38, 85);
+            this.label7.Location = new System.Drawing.Point(38, 141);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(52, 13);
             this.label7.TabIndex = 1;
@@ -262,21 +283,21 @@
             this.forTesting.UseVisualStyleBackColor = true;
             this.forTesting.Click += new System.EventHandler(this.forTesting_Click);
             // 
-            // cupTxtbox
+            // label10
             // 
-            this.cupTxtbox.Location = new System.Drawing.Point(15, 148);
-            this.cupTxtbox.Name = "cupTxtbox";
-            this.cupTxtbox.Size = new System.Drawing.Size(100, 20);
-            this.cupTxtbox.TabIndex = 4;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(35, 30);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(64, 13);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Round Num";
             // 
-            // label9
+            // roundNumtxtbox
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(38, 132);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(61, 13);
-            this.label9.TabIndex = 1;
-            this.label9.Text = "Dice in cup";
+            this.roundNumtxtbox.Location = new System.Drawing.Point(14, 46);
+            this.roundNumtxtbox.Name = "roundNumtxtbox";
+            this.roundNumtxtbox.Size = new System.Drawing.Size(100, 20);
+            this.roundNumtxtbox.TabIndex = 4;
             // 
             // Form1
             // 
@@ -294,7 +315,6 @@
             this.Controls.Add(this.diceRollBtn);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox3);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.label1);
@@ -340,6 +360,8 @@
         private System.Windows.Forms.Button forTesting;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox cupTxtbox;
+        private System.Windows.Forms.TextBox roundNumtxtbox;
+        private System.Windows.Forms.Label label10;
     }
 }
 

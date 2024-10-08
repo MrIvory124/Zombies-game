@@ -16,9 +16,11 @@ namespace Zombies_game
         // Instantiate the delegate.
         readonly Callback handler = DelegateMethod;
 
-        readonly int REDDICENUM = 3;
-        readonly int GREENDICENUM = 6;
-        readonly int YELLOWDICENUM = 4;
+        const int REDDICENUM = 3;
+        const int GREENDICENUM = 6;
+        const int YELLOWDICENUM = 4;
+
+        const int totalDice = REDDICENUM + GREENDICENUM + YELLOWDICENUM;
 
         Random rand = new Random();
 
@@ -28,7 +30,7 @@ namespace Zombies_game
         {
             InitializeComponent();
             currentGame = new GameState(YELLOWDICENUM, REDDICENUM, GREENDICENUM);
-            turnTxtbox.Text = currentGame.Turn.ToString(); // this might be an error
+            turnTxtbox.Text = "Player 1"; // this might be an error
             
         }
 
@@ -39,41 +41,32 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
+            DisableInterface();
             currentGame.RollAllDice();
-            bool isTurnOver = currentGame.IsTurnOver();
-
-            Console.WriteLine("Diff chk, dice 1 rolled: " + currentGame.CurrentDice[1].CurrentVal);
+            bool isTurnOver = currentGame.IsTurnOver(); // triggers here
 
             UpdateTextBoxes();
 
             if (isTurnOver)
             {
-                MessageBox.Show("You got gunned down!");
+                // in the case that the 2nd player gets gunned down, and its their final turn
+                if (currentGame.FinalRound == true && currentGame.Turn == currentGame.player1)
+                {
+                    MessageBox.Show("You got gunned down!");
+                    // player 2 scored above or at 13, game is over
+                    TriggerEndGame(currentGame.player1);
+                    UpdateTextBoxes();
+                }
+                else
+                {
+                    MessageBox.Show("You got gunned down!");
+                    //currentGame.PlayerNotScores();
+                    currentGame.pubInitDice();
+                }
+
             }
-
-            //// check if they got 3 shotguns
-            //bool isRoundOver = ShotgunCheck();
-
-            //if (isRoundOver)
-            //{
-            //    MessageBox.Show("You got gunned down!"); // could turn any message boxes into a delegate
-            //    handler("Inverting turn");
-            //    handler("Turn before: " + player1Turn);
-            //    PlayerDoesNotScore();
-            //    handler("Turn after: " + player1Turn);
-
-            //    // if they failed in their final round, consider it over
-            //    if (finalround)
-            //    {
-
-            //        TriggerEndGame(WhichPlayerTurn());
-            //    }
-            //}
-
-            //debugging options
-            //DiceInit();
-            Testcases();
-
+            UpdateTextBoxes();
+            EnableInterface();
            
         }
 
@@ -85,7 +78,7 @@ namespace Zombies_game
         /// <param name="e"></param>
         private void stopScoreBtn_Click(object sender, EventArgs e)
         {
-
+            DisableInterface();
             // quick test to see if the user pressed the roll button
             if (currentGame.CurrentDice[0] == null)
             {
@@ -94,128 +87,54 @@ namespace Zombies_game
             }
             
             int win = currentGame.PlayerScores();
-
-            if (win == 1)
+            UpdateTextBoxes();
+            if (currentGame.FinalRound == true)
             {
-                // player 2 gets their final turn
+                Console.WriteLine("Checking winner");
+                if (currentGame.player1.Score > currentGame.player2.Score)
+                {
+                    TriggerEndGame(currentGame.player1);
+                }
+                else if (currentGame.player1.Score < currentGame.player2.Score)
+                {
+                    TriggerEndGame(currentGame.player2);
+                }
+                else // player 1 wins by default
+                {
+                    TriggerEndGame(currentGame.player1);
+                    Console.WriteLine("tie");
+                }
             }
-            else if (win == 2){
-                TriggerEndGame(currentGame.WhoWon());
+            else
+            {
+                if (win == 1)
+                {
+                    // player 2 scored above or at 13, game is over
+                    TriggerEndGame(currentGame.WhoWon());
+                    Console.WriteLine(win);
+                    UpdateTextBoxes();
+                }
+                else if (win == 2)
+                {
+                    // player 1 scored at or above 13, player 2 gets one more turn
+                    Console.WriteLine(win);
+                    currentGame.FinalRound = true;
+                    UpdateTextBoxes();
+                    MessageBox.Show("Player 2, you have 1 round to catch them!");
+                }
             }
+
+            // redo the dice list for the next player to start fresh
+            currentGame.pubInitDice();
 
             UpdateTextBoxes();
-
-            // this is supposed to be instead: in a round of 3 people, if the person who went first wins, then the other
-            // 2 get to finish their turn, otherwise its game over. wtf is this shit
-            // if its the final round
-            //if (currentGame.FinalRound == true) // TODO: REWORK THIS FUCKING SHIT BECAUSE ITS INCORRECT
-
-            //{
-            //    handler("In final rounds");
-            //    if (currentPlayer == player1)
-            //    {
-            //        // if their score is higher, hand it back for one more turn
-            //        if (player1.Score >= player2.Score)
-            //        {
-            //            handler("Score is greater or equal, doing one more round");
-            //            MessageBox.Show("They caught up! Quick run away!");
-            //            player1Turn = false;
-            //            UpdateTextBoxes();
-            //        }
-            //        else // if it isnt, call the other person the winner
-            //        {
-            //            handler("Triggering endgame");
-            //            TriggerEndGame(player2);
-            //        };
-
-            //    }
-            //    else
-            //    {
-            //        // if their score is higher, hand it back for one more turn
-            //        if (player2.Score >= player1.Score)
-            //        {
-            //            handler("Score is greater or equal, doing one more round");
-            //            MessageBox.Show("They caught up! Quick run away!");
-            //            player1Turn = true;
-            //            UpdateTextBoxes();
-            //        }
-            //        else // if it isnt, call the other person the winner
-            //        {
-            //            handler("Triggering endgame");
-            //            TriggerEndGame(player1);
-            //        };
-            //    }
-
-            //}
-            //else
-            //{
-            //    //handler("Turn before: " + player1Turn);
-            //    //player1Turn = !player1Turn;
-            //    //handler("Inverting turn " + player1Turn);
-            //}
-
-            //// check if they have 13 points, we only run this if we are not in the final round
-            //if (finalround == false)
-            //{
-            //    if (CheckScore(currentPlayer))
-            //    {
-            //        MessageBox.Show("You have 1 round to catch them!");
-            //    }
-            //}
-
-
-            //// make sure to invert turn when done
-
-            //Testcases();
-            //handler("Player1's turn? " + player1Turn);
-        }
-
-        private void Testcases()
-        {
-            //// list for temp dice
-            //List<Dice> diceList = new List<Dice>();
-            //// check that all dice are generating with faces
-
-            //handler("Generating dice");
-
-            //// add the dice to the dicelist
-            //diceList.Add(new GDice());
-            //diceList.Add(new YDice());
-            //diceList.Add(new RDice());
-
-            //// checks the dice list is working
-            //foreach (Dice dice in diceList)
-            //{
-            //    handler($"Checking dice {dice}");
-            //    foreach (Dice.ZombieOptions item in dice.Facelist)
-            //    {
-            //        handler(item);
-            //    }
-
-            //    // check roll functionality as well
-            //    dice.RollDie();
-            //    handler($"Checking roll func {dice.ShowFace()}");
-            //    dice.RollDie();
-            //    handler($"Checking roll func {dice.ShowFace()}");
-            //    dice.RollDie();
-            //    handler($"Checking roll func {dice.ShowFace()}");
-            //    handler();
-
-            //}
-
-            //handler("\nChecking the dicelist");
-            //foreach (Dice dice in diceArray)
-            //{
-            //    handler(dice.ToString());
-            //}
-
-
-            handler("\nDone");
+            EnableInterface();
         }
 
         private void UpdateTextBoxes()
         {
             turnTxtbox.Text = currentGame.TurnString;
+            roundNumtxtbox.Text = currentGame.RoundNum.ToString();
 
             // for the turn information in the middle
             turnBrainsTxt.Text = currentGame.ThisTurnBrains.ToString();
@@ -242,9 +161,20 @@ namespace Zombies_game
             handler("==========");
         }
 
+        private void DisableInterface()
+        {
+            diceRollBtn.Enabled = false;
+            stopScoreBtn.Enabled = false;
+        }
+
+        private void EnableInterface()
+        {
+            diceRollBtn.Enabled = true;
+            stopScoreBtn.Enabled = true;
+        }
+
         private void TriggerEndGame(Player player)
         {
-            //timer1.Stop();
             // announce the winner
             string _ = "";
             if (player == currentGame.player1)
@@ -261,10 +191,10 @@ namespace Zombies_game
 
             // reset everything
             currentGame = new GameState(YELLOWDICENUM, REDDICENUM, GREENDICENUM);
+            currentGame.pubInitDice();
 
             UpdateTextBoxes();
         }
-
 
         private void forTesting_Click(object sender, EventArgs e)
         {

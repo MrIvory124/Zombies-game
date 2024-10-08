@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.Eventing.Reader;
 
 namespace Zombies_game
 {
@@ -26,6 +22,7 @@ namespace Zombies_game
         // for keeping track of this persons score and shotguns
         private int _turnScore;
         private int _turnShotguns;
+        private List<Dice> shotgunDice;
 
         // ints for keeping track of how many dice there are
         private int _yDice;
@@ -36,8 +33,9 @@ namespace Zombies_game
         private List<Dice> diceList; // list for all 13 dice
 
         // constructor
-        public GameState(int yDiceNum, int rDiceNum, int gDiceNum) {
-        diceList = new List<Dice>();
+        public GameState(int yDiceNum, int rDiceNum, int gDiceNum)
+        {
+            diceList = new List<Dice>();
 
             _yDice = yDiceNum;
             _rDice = rDiceNum;
@@ -46,6 +44,7 @@ namespace Zombies_game
             RoundNum = 0;
             _playerTurn = player1;
             ThisTurnShotguns = 0;
+            shotgunDice = new List<Dice>();
             ThisTurnBrains = 0;
             _finalRound = false;
             InitDice(_yDice, _rDice, _gDice);
@@ -62,7 +61,7 @@ namespace Zombies_game
         public bool FinalRound
         {
             get { return _finalRound; }
-            set { _finalRound = !_finalRound; }
+            set { _finalRound = value; ; }
         }
 
         // incrementing and asking for round number
@@ -88,7 +87,7 @@ namespace Zombies_game
 
         public string TurnString
         {
-            get { if (Turn == player1) { return "Player 1"; } else { return "Player 2"; } ; }
+            get { if (Turn == player1) { return "Player 1"; } else { return "Player 2"; }; }
         }
 
         public Dice[] CurrentDice
@@ -98,11 +97,26 @@ namespace Zombies_game
 
         public int DiceLeft
         {
-            get { return diceList.Count;}
+            get { return diceList.Count; }
         }
 
 
         // methods
+
+        public void pubInitDice()
+        {
+            InitDice(_yDice, _rDice, _gDice);
+            // roll the first 3 dice
+            for (int i = 0; i < rolledDice.Length; i++)
+            {
+                int nextDice = random.Next(diceList.Count);
+                rolledDice[i] = diceList[nextDice];
+                // remove from the list as we are done
+                diceList.Remove(rolledDice[i]);
+                rolledDice[i].RollDie();
+            }
+        }
+
         /// <summary>
         /// This method creates the array of 13 dice that is used for the game
         /// </summary>
@@ -112,6 +126,16 @@ namespace Zombies_game
         private void InitDice(int yDiceNum, int rDiceNum, int gDiceNum)
         {
             diceList = new List<Dice>();
+
+            // in the case theyre still in their turn, we minus from the correct die
+            foreach (Dice dice in shotgunDice)
+            {
+                if (dice == null) continue;
+                else if (dice is YDice) { yDiceNum--; }
+                else if (dice is RDice) { rDiceNum--; }
+                else if (dice is GDice) { gDiceNum--; }
+
+            }
 
             // initialise all the dice
             for (int i = 0; i < yDiceNum; i++)
@@ -140,7 +164,7 @@ namespace Zombies_game
             // if there are no dice, initialise
             if (rolledDice[0] == null)
             {
-                for (int i = 0;i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     // pull random dice from dicelist
                     int randomLocation = random.Next(diceList.Count);
@@ -182,7 +206,18 @@ namespace Zombies_game
 
                 // then roll it
                 rolledDice[i].RollDie();
-                Console.WriteLine("Dice rolled: " + rolledDice[i].CurrentVal);
+
+                // add to points for this round
+                if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Brains)
+                {
+                    ThisTurnBrains += 1;
+                }
+                else if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Shotgun)
+                {
+                    ThisTurnShotguns += 1;
+                    shotgunDice.Add(rolledDice[i]);
+                }
+
             }
 
         }
@@ -208,12 +243,12 @@ namespace Zombies_game
         /// This method checks if the person who is going has been shot and 
         /// switches provided they have
         /// </summary>
-        public bool IsTurnOver() {
+        public bool IsTurnOver()
+        {
             if (ThisTurnShotguns >= 3)
             {
                 Console.WriteLine("Shotgun check returned true");
                 PlayerNotScores();
-                this.SwitchTurn();
                 return true;
             }
 
@@ -223,27 +258,33 @@ namespace Zombies_game
         }
 
         /// <summary>
-        /// If the player scores, update their score
+        /// This returns 0-2 for each outcome. 
+        /// 1 means that it was player 2 who scored 13.
+        /// 2 means it was player 1 that scored 13.
+        /// 0 means no one scored 13, and we can move on.
         /// </summary>
         public int PlayerScores()
         {
             _playerTurn.Score += ThisTurnBrains;
             // if the player has enough points to win
-            if (_playerTurn.Score >= 13) {
-                // if the player is player 2
+            if (_playerTurn.Score >= 13)
+            {
+                // if the player is player 2, do not allow another turn
                 if (_playerTurn == player2)
                 {
+                    _finalRound = true;
+                    PlayerNotScores();
                     return 1;
                 }
-                else 
+                else // if it was player 1, player 2 gets one more turn
                 {
                     // enable the final round to allow player 2 one more turn to catch them
-                    FinalRound = true;
+                    PlayerNotScores();
                     return 2;
                 }
 
             }
-            
+
             PlayerNotScores();
             return 0;
         }
@@ -255,6 +296,8 @@ namespace Zombies_game
         {
             ThisTurnBrains = 0;
             ThisTurnShotguns = 0;
+            shotgunDice = new List<Dice>();
+            Console.WriteLine("turn being switched");
             this.SwitchTurn();
         }
 
