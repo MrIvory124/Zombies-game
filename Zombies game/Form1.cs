@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Zombies_game
 {
     public partial class Form1 : Form
     {
-        public delegate void Callback(string message);
+        //public delegate void Callback(string message);
+       
         // delegate for consolewriting
-        public static void DelegateMethod(string message)
-        {
-            Console.WriteLine(message);
-        }
+        //public static void DelegateMethod(string message)
+        //{
+        //    Console.WriteLine(message);
+        //}
 
-        // Instantiate the delegate.
-        readonly Callback handler = DelegateMethod;
+        //// Instantiate the delegate.
+        //readonly Callback handler = DelegateMethod;
 
+        // constants for the number of dice
         const int REDDICENUM = 3;
         const int GREENDICENUM = 6;
         const int YELLOWDICENUM = 4;
-
-        const int totalDice = REDDICENUM + GREENDICENUM + YELLOWDICENUM;
 
         Random rand = new Random();
 
         GameState currentGame;
 
+        /// <summary>
+        /// For creating the game form
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
@@ -35,14 +39,18 @@ namespace Zombies_game
         }
 
         /// <summary>
-        /// This button rolls the dice
+        /// The player has clicked this button if they want to keep rolling. 
+        /// What it does is roll the dice, it also checks some game logic around whether someone 
+        /// has won or not.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void diceRollbtn_Click(object sender, EventArgs e)
         {
             DisableInterface();
-            currentGame.RollAllDice();
+            currentGame.RollAllDice(); // there is a problem here, we are automatically adding dice to the dice array at the beginning of each
+            // players turn which means they just straight up get less dice to roll with. Maybe add a check to see if the dice is exactly
+            // 10 and just roll those dice in the dice thing instead of getting new ones.
             bool isTurnOver = currentGame.IsTurnOver(); // triggers here
 
             UpdateTextBoxes();
@@ -71,8 +79,7 @@ namespace Zombies_game
         }
 
         /// <summary>
-        /// If the player clicks the stop button, we move to scoring for
-        /// the other player
+        /// The player has clicked this button if they want to score all the brains that they have.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -88,8 +95,10 @@ namespace Zombies_game
             
             int win = currentGame.PlayerScores();
             UpdateTextBoxes();
+            // if we are in the final round
             if (currentGame.FinalRound == true)
             {
+                // check to see which player just had their turn
                 Console.WriteLine("Checking winner");
                 if (currentGame.player1.Score > currentGame.player2.Score)
                 {
@@ -99,26 +108,21 @@ namespace Zombies_game
                 {
                     TriggerEndGame(currentGame.player2);
                 }
-                else // player 1 wins by default
+                else // player 2 wins because they caught them
                 {
-                    TriggerEndGame(currentGame.player1);
-                    Console.WriteLine("tie");
+                    TriggerEndGame(currentGame.player2);
                 }
             }
-            else
+            else // if we are not in the final round
             {
-                if (win == 1)
+                if (win == 1) // in the case that its player 2's turn
                 {
-                    // player 2 scored above or at 13, game is over
                     TriggerEndGame(currentGame.WhoWon());
-                    Console.WriteLine(win);
                     UpdateTextBoxes();
                 }
-                else if (win == 2)
+                else if (win == 2) // in the case that its player 1's turn
                 {
-                    // player 1 scored at or above 13, player 2 gets one more turn
-                    Console.WriteLine(win);
-                    currentGame.FinalRound = true;
+                    currentGame.FinalRound = true; // make it the final round
                     UpdateTextBoxes();
                     MessageBox.Show("Player 2, you have 1 round to catch them!");
                 }
@@ -127,10 +131,14 @@ namespace Zombies_game
             // redo the dice list for the next player to start fresh
             currentGame.pubInitDice();
 
+            // clear things
             UpdateTextBoxes();
             EnableInterface();
         }
 
+        /// <summary>
+        /// This method updates all of the text boxes based on information in the respective classes.
+        /// </summary>
         private void UpdateTextBoxes()
         {
             turnTxtbox.Text = currentGame.TurnString;
@@ -140,42 +148,66 @@ namespace Zombies_game
             turnBrainsTxt.Text = currentGame.ThisTurnBrains.ToString();
             turnShotgunTxt.Text = currentGame.ThisTurnShotguns.ToString();
 
+            // prepare the array for displaying
             Dice[] currentDice = currentGame.CurrentDice;
 
-            // set the background color to the dice that is being used
-            textBox1.BackColor = currentDice[0].DiceColor;
-            textBox1.Text = currentDice[0].CurrentVal.ToString();
+            // try, set the background color/face to the dice that is being used
+            if (!(currentDice[0] == null))
+            {
 
-            textBox2.BackColor = currentDice[1].DiceColor;
-            textBox2.Text = currentDice[1].CurrentVal.ToString();
+                textBox1.BackColor = currentDice[0].DiceColor;
+                textBox1.Text = currentDice[0].CurrentVal.ToString();
 
-            textBox3.BackColor = currentDice[2].DiceColor;
-            textBox3.Text = currentDice[2].CurrentVal.ToString();
+                textBox2.BackColor = currentDice[1].DiceColor;
+                textBox2.Text = currentDice[1].CurrentVal.ToString();
+
+                textBox3.BackColor = currentDice[2].DiceColor;
+                textBox3.Text = currentDice[2].CurrentVal.ToString();
+            }
+            else
+            {
+                textBox1.BackColor = Color.White;
+                textBox1.Text = "";
+
+                textBox2.BackColor = Color.White;
+                textBox2.Text = "";
+
+                textBox3.BackColor = Color.White;
+                textBox3.Text = "";
+            }
 
             // update score boxes
             plyr1Brains.Text = currentGame.player1.Score.ToString();
             plyr2Brains.Text = currentGame.player2.Score.ToString();
 
             cupTxtbox.Text = currentGame.DiceLeft.ToString() ;
-
-            handler("==========");
         }
 
+        /// <summary>
+        /// This disables the buttons, this will be helpful for when using rolling animations
+        /// </summary>
         private void DisableInterface()
         {
             diceRollBtn.Enabled = false;
             stopScoreBtn.Enabled = false;
         }
 
+        /// <summary>
+        /// .This is code for reenabling the buttons
+        /// </summary>
         private void EnableInterface()
         {
             diceRollBtn.Enabled = true;
             stopScoreBtn.Enabled = true;
         }
 
+        /// <summary>
+        /// This is the code that handles when someone has won
+        /// </summary>
+        /// <param name="player"></param>
         private void TriggerEndGame(Player player)
         {
-            // announce the winner
+            // determine and announce the winner
             string _ = "";
             if (player == currentGame.player1)
             {
@@ -196,6 +228,11 @@ namespace Zombies_game
             UpdateTextBoxes();
         }
 
+        /// <summary>
+        /// This is a method for testing purposes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void forTesting_Click(object sender, EventArgs e)
         {
             currentGame.player1.Score = 12;

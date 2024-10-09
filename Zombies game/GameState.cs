@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 
 namespace Zombies_game
 {
@@ -9,16 +8,18 @@ namespace Zombies_game
         // fields 
         Random random = new Random();
 
-        // create the player
+        // create the players
         public Player player1 = new Player();
         public Player player2 = new Player(); // this can be a bot, change list later
 
         // for monitoring which players turn it is
         private Player _playerTurn;
+
         // seeing if we are in the final round of the game
         private bool _finalRound;
 
         private int _roundNum;
+
         // for keeping track of this persons score and shotguns
         private int _turnScore;
         private int _turnShotguns;
@@ -29,12 +30,14 @@ namespace Zombies_game
         private int _rDice;
         private int _gDice;
 
-        private Dice[] rolledDice = new Dice[3]; // array for the 3 rolled dice
-        private List<Dice> diceList; // list for all 13 dice
+        private Dice[] rolledDice = new Dice[3];
+        private List<Dice> diceList;
+        private List<Dice> removedDiceLst;
 
         // constructor
         public GameState(int yDiceNum, int rDiceNum, int gDiceNum)
         {
+            // default constructor initialises things
             diceList = new List<Dice>();
 
             _yDice = yDiceNum;
@@ -51,27 +54,23 @@ namespace Zombies_game
         }
 
         // getter setters
-        // toggle for changing turns
+
         public Player Turn
         {
             get { return _playerTurn; }
         }
 
-        // getter setter for toggling the final round bool
         public bool FinalRound
         {
             get { return _finalRound; }
             set { _finalRound = value; ; }
         }
 
-        // incrementing and asking for round number
         public int RoundNum
         {
             get { return _roundNum; }
             set { _roundNum += 1; }
         }
-
-        // incrementing and asking for round number
 
         public int ThisTurnShotguns
         {
@@ -85,6 +84,7 @@ namespace Zombies_game
             set { _turnScore = value; }
         }
 
+        // Getting a string for which players turn it is
         public string TurnString
         {
             get { if (Turn == player1) { return "Player 1"; } else { return "Player 2"; }; }
@@ -102,18 +102,22 @@ namespace Zombies_game
 
 
         // methods
-
+        /// <summary>
+        /// This is the method for when a class outside of this wants to redo the dice list
+        /// this should be changed to shuffle around the dice that exist currently rather than just calling for new objects
+        /// </summary>
         public void pubInitDice()
         {
-            InitDice(_yDice, _rDice, _gDice);
-            // roll the first 3 dice
-            for (int i = 0; i < rolledDice.Length; i++)
+            // InitDice(_yDice, _rDice, _gDice);
+            // take all the dice from the rolled pile and add them to the main list
+            for (int i = removedDiceLst.Count - 1; i >= 0; i--)
             {
-                int nextDice = random.Next(diceList.Count);
-                rolledDice[i] = diceList[nextDice];
-                // remove from the list as we are done
-                diceList.Remove(rolledDice[i]);
-                rolledDice[i].RollDie();
+                if (!(shotgunDice.Contains(removedDiceLst[i])))
+                {
+                    diceList.Add(removedDiceLst[i]);
+                    removedDiceLst.RemoveAt(i);
+                }
+
             }
         }
 
@@ -126,18 +130,10 @@ namespace Zombies_game
         private void InitDice(int yDiceNum, int rDiceNum, int gDiceNum)
         {
             diceList = new List<Dice>();
-
-            // in the case theyre still in their turn, we minus from the correct die
-            foreach (Dice dice in shotgunDice)
-            {
-                if (dice == null) continue;
-                else if (dice is YDice) { yDiceNum--; }
-                else if (dice is RDice) { rDiceNum--; }
-                else if (dice is GDice) { gDiceNum--; }
-
-            }
+            removedDiceLst = new List<Dice>();
 
             // initialise all the dice
+            Console.WriteLine("recreating list");
             for (int i = 0; i < yDiceNum; i++)
             {
                 diceList.Add(new YDice());
@@ -152,7 +148,7 @@ namespace Zombies_game
             {
                 diceList.Add(new GDice());
             }
-
+            Console.WriteLine($"Init Dicelist has {diceList.Count} and removeddicelist has {removedDiceLst.Count}");
         }
 
         /// <summary>
@@ -169,53 +165,69 @@ namespace Zombies_game
                     // pull random dice from dicelist
                     int randomLocation = random.Next(diceList.Count);
                     rolledDice[i] = diceList[randomLocation];
+                    removedDiceLst.Add(diceList[randomLocation]);
                     diceList.RemoveAt(randomLocation);
+
+                    // the below code is repeated, this only runs once though, first time roll is pressed
+
+                    // then roll it
+                    rolledDice[i].RollDie();
+
+                    // add to points for this round
+                    if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Brains)
+                    {
+                        ThisTurnBrains += 1;
+                    }
+                    // add shotguns if appropriate
+                    else if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Shotgun)
+                    {
+                        ThisTurnShotguns += 1;
+                        shotgunDice.Add(rolledDice[i]);
+                    }
                 }
             }
-
-            //if (diceList.Count == 0)
-            //{
-            //    InitDice(_yDice, _rDice, _gDice);
-            //}
-
-            // check if any dice in the rolledDice array are feet
-            for (int i = 0; i < rolledDice.Length; i++)
+            else
             {
-                if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Feet)
+                // check if any dice in the rolledDice array are feet
+                for (int i = 0; i < rolledDice.Length; i++)
                 {
-                    // If the die is Feet, keep it
-                    Console.WriteLine("Face is Feet - keeping the same die");
-                }
-                else
-                {
-                    Console.WriteLine("Face is shotgun/brains");
-                    int nextDice = random.Next(diceList.Count);
-                    try // roll the die
+                    if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Feet)
                     {
-                        rolledDice[i] = diceList[nextDice];
+                        // If the die is Feet, do nothing
                     }
-                    catch // if error reset the list
+                    else
                     {
-                        InitDice(_yDice, _rDice, _gDice);
-                        rolledDice[i] = diceList[nextDice];
+                        int nextDice = random.Next(diceList.Count);
+                        try // roll the die
+                        {
+                            rolledDice[i] = diceList[nextDice];
+                        }
+                        catch // if error reset the list, in this case there are no dice left
+                        {
+                            pubInitDice();
+                            rolledDice[i] = diceList[nextDice];
+                        }
+
+                        // remove from the list as we are done
+                        removedDiceLst.Add(rolledDice[i]);
+                        diceList.Remove(rolledDice[i]);
                     }
 
-                    // remove from the list as we are done
-                    diceList.Remove(rolledDice[i]);
-                }
+                    // then roll it
+                    rolledDice[i].RollDie();
 
-                // then roll it
-                rolledDice[i].RollDie();
+                    // add to points for this round
+                    if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Brains)
+                    {
+                        ThisTurnBrains += 1;
+                    }
+                    // add shotguns if appropriate
+                    else if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Shotgun)
+                    {
+                        ThisTurnShotguns += 1;
+                        shotgunDice.Add(rolledDice[i]);
+                    }
 
-                // add to points for this round
-                if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Brains)
-                {
-                    ThisTurnBrains += 1;
-                }
-                else if (rolledDice[i].CurrentVal == Dice.ZombieOptions.Shotgun)
-                {
-                    ThisTurnShotguns += 1;
-                    shotgunDice.Add(rolledDice[i]);
                 }
 
             }
@@ -297,6 +309,21 @@ namespace Zombies_game
             ThisTurnBrains = 0;
             ThisTurnShotguns = 0;
             shotgunDice = new List<Dice>();
+            Console.WriteLine(removedDiceLst.Count.ToString());
+            // put all the dice objects back into the dicelist
+            // reset the lists
+            for (int i = removedDiceLst.Count - 1; i >= 0; i--)
+            {
+                diceList.Add(removedDiceLst[i]);
+                removedDiceLst.RemoveAt(i);
+            }
+
+            // clear the dice in hand
+            for (int i = 0; i < rolledDice.Length; i++)
+            {
+                rolledDice[i] = null;
+            }
+
             Console.WriteLine("turn being switched");
             this.SwitchTurn();
         }

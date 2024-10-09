@@ -10,6 +10,8 @@ namespace Zombies_game
 {
     public class Player
     {
+        // this is currently a very lazy class, but it makes the code easier to read
+
         // fields
         protected int _brains;
         protected int _shotguns;
