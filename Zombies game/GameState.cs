@@ -132,6 +132,7 @@ namespace Zombies_game
             diceList = new List<Dice>();
             removedDiceLst = new List<Dice>();
 
+
             // initialise all the dice
             Console.WriteLine("recreating list");
             for (int i = 0; i < yDiceNum; i++)
