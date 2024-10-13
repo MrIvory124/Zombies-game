@@ -52,12 +52,20 @@
             this.label9 = new System.Windows.Forms.Label();
             this.cupTxtbox = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.roundNumtxtbox = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.turnTxtbox = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.forTesting = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.roundNumtxtbox = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.redDiceTxt = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.yellowDiceTxt = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.greenDiceTxt = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -222,17 +230,15 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.label9);
-            this.groupBox4.Controls.Add(this.cupTxtbox);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.turnShotgunTxt);
             this.groupBox4.Controls.Add(this.roundNumtxtbox);
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.turnBrainsTxt);
             this.groupBox4.Controls.Add(this.label8);
-            this.groupBox4.Location = new System.Drawing.Point(327, 12);
+            this.groupBox4.Location = new System.Drawing.Point(254, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(130, 234);
+            this.groupBox4.Size = new System.Drawing.Size(130, 193);
             this.groupBox4.TabIndex = 6;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "This turn";
@@ -240,15 +246,15 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(38, 188);
+            this.label9.Location = new System.Drawing.Point(36, 16);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(61, 13);
+            this.label9.Size = new System.Drawing.Size(63, 13);
             this.label9.TabIndex = 1;
-            this.label9.Text = "Dice in cup";
+            this.label9.Text = "Total in cup";
             // 
             // cupTxtbox
             // 
-            this.cupTxtbox.Location = new System.Drawing.Point(15, 204);
+            this.cupTxtbox.Location = new System.Drawing.Point(13, 32);
             this.cupTxtbox.Name = "cupTxtbox";
             this.cupTxtbox.Size = new System.Drawing.Size(100, 20);
             this.cupTxtbox.TabIndex = 4;
@@ -261,6 +267,22 @@
             this.label7.Size = new System.Drawing.Size(52, 13);
             this.label7.TabIndex = 1;
             this.label7.Text = "Shotguns";
+            // 
+            // roundNumtxtbox
+            // 
+            this.roundNumtxtbox.Location = new System.Drawing.Point(14, 46);
+            this.roundNumtxtbox.Name = "roundNumtxtbox";
+            this.roundNumtxtbox.Size = new System.Drawing.Size(100, 20);
+            this.roundNumtxtbox.TabIndex = 4;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(35, 30);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(64, 13);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "Round Num";
             // 
             // turnTxtbox
             // 
@@ -283,27 +305,77 @@
             this.forTesting.UseVisualStyleBackColor = true;
             this.forTesting.Click += new System.EventHandler(this.forTesting_Click);
             // 
-            // label10
+            // groupBox5
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(35, 30);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 13);
-            this.label10.TabIndex = 1;
-            this.label10.Text = "Round Num";
+            this.groupBox5.Controls.Add(this.label13);
+            this.groupBox5.Controls.Add(this.greenDiceTxt);
+            this.groupBox5.Controls.Add(this.label12);
+            this.groupBox5.Controls.Add(this.yellowDiceTxt);
+            this.groupBox5.Controls.Add(this.label11);
+            this.groupBox5.Controls.Add(this.redDiceTxt);
+            this.groupBox5.Controls.Add(this.label9);
+            this.groupBox5.Controls.Add(this.cupTxtbox);
+            this.groupBox5.Location = new System.Drawing.Point(429, 12);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(130, 193);
+            this.groupBox5.TabIndex = 7;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Cup";
             // 
-            // roundNumtxtbox
+            // redDiceTxt
             // 
-            this.roundNumtxtbox.Location = new System.Drawing.Point(14, 46);
-            this.roundNumtxtbox.Name = "roundNumtxtbox";
-            this.roundNumtxtbox.Size = new System.Drawing.Size(100, 20);
-            this.roundNumtxtbox.TabIndex = 4;
+            this.redDiceTxt.Location = new System.Drawing.Point(13, 71);
+            this.redDiceTxt.Name = "redDiceTxt";
+            this.redDiceTxt.Size = new System.Drawing.Size(100, 20);
+            this.redDiceTxt.TabIndex = 4;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(36, 55);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(59, 13);
+            this.label11.TabIndex = 1;
+            this.label11.Text = "Red in cup";
+            // 
+            // yellowDiceTxt
+            // 
+            this.yellowDiceTxt.Location = new System.Drawing.Point(13, 110);
+            this.yellowDiceTxt.Name = "yellowDiceTxt";
+            this.yellowDiceTxt.Size = new System.Drawing.Size(100, 20);
+            this.yellowDiceTxt.TabIndex = 4;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(27, 94);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(70, 13);
+            this.label12.TabIndex = 1;
+            this.label12.Text = "Yellow in cup";
+            // 
+            // greenDiceTxt
+            // 
+            this.greenDiceTxt.Location = new System.Drawing.Point(13, 149);
+            this.greenDiceTxt.Name = "greenDiceTxt";
+            this.greenDiceTxt.Size = new System.Drawing.Size(100, 20);
+            this.greenDiceTxt.TabIndex = 4;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(27, 133);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(68, 13);
+            this.label13.TabIndex = 1;
+            this.label13.Text = "Green in cup";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.forTesting);
             this.Controls.Add(this.stopScoreBtn);
             this.Controls.Add(this.plyr2Brains);
@@ -327,6 +399,8 @@
             this.Text = "Form1";
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -362,6 +436,13 @@
         private System.Windows.Forms.TextBox cupTxtbox;
         private System.Windows.Forms.TextBox roundNumtxtbox;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox greenDiceTxt;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox yellowDiceTxt;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox redDiceTxt;
     }
 }
 

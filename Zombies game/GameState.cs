@@ -100,6 +100,11 @@ namespace Zombies_game
             get { return diceList.Count; }
         }
 
+        public List<Dice> DiceInCup
+        {
+            get { return diceList; }
+        }
+
 
         // methods
         /// <summary>

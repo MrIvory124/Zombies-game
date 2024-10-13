@@ -180,6 +180,20 @@ namespace Zombies_game
             plyr1Brains.Text = currentGame.player1.Score.ToString();
             plyr2Brains.Text = currentGame.player2.Score.ToString();
 
+            int redDice = 0;
+            int greenDice = 0;
+            int yellowDice = 0;
+            foreach (var dice in currentGame.DiceInCup) {
+
+                if (dice is GDice) { greenDice++; };
+                if (dice is RDice) { redDice++; };
+                if (dice is YDice) { yellowDice++; };
+            }
+
+            redDiceTxt.Text = redDice.ToString();
+            greenDiceTxt.Text = greenDice.ToString();
+            yellowDiceTxt.Text = yellowDice.ToString();
+
             cupTxtbox.Text = currentGame.DiceLeft.ToString() ;
         }
 
